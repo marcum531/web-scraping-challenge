@@ -1,7 +1,7 @@
 from flask import Flask, render_template
-from flask_pymongo import PyMongo
+import pymongo
 import Mission_to_Mars.py
 
 app = Flask (__name__)
-mongo = PyMongo(app, url="mongodb://localhost:27017")
+mongo = pymongo(app, url="mongodb://localhost:27017")
 
