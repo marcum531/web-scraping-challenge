@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission to Mars</title>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='style.css'>
+</head>
+<body>
+    <div class='container'>
+        <div class='jumbotron text-center'>
+            <h1>Mission to Mars</h1>
+            <a href="/scrape" class='btn btn-info' role='button'>Scrape New Data</a>
+            
+        </div>
+
+        <div class='row'>
+            <div class='col-md-12'>
+                <div class = "media">
+                <div class = "media-body">
+                <h2>Latest Mars News</h2>
+                <h3 class = "media-heading">{{title}}</h3>
+                <p>{{body}}</p>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-8'>
+                <h4>Featured Mars Image</h4>
+                <img src="{{mars.featured_images}}" class="img-responsive">
+                <br>
+            </div>
+
+            <div class = "col-lg-4 col-md-8 col-sm-12">
+                <br>
+                <br>
+              <div class = "card" style ="width: 18rem;">
+                  <div class="card-body text-black" style="background-color: rgb(190,190,190);">
+                      <h6 class="card-title" style="font-weight: bold; font-size: 20px">Current Weather on Mars </h6>
+                      <p class="card-text">{{mars_weather}}</p>
+                    </div>
+                </div>
+                <br>
+                <h3>Mars Facts</h3>
+                <div class = "text-align" style="text-align: center; max-width: 450px; max-height: 100px; font-size: 15px; margin-bottom: 20x;">{{mars.mars_facts | safe}}
+                                      
+                        
+                </div>
+            </div>          
+        </div>
+
+        <div class='row' id = "mars-hemispheres" style ="margin-top:80px;">
+
+            <div class ="page-header">
+                <h2 class = "text-center">Mars Hemispheres</h2>
+            </div>
+
+            {% for hemisphere in mars.hemispheres %}
+                <div class = "col-md-6">
+                    <div class = "thumbnail">
+
+                        <img src="{{hemisphere.image_url}}" alt="Hemisphere Pictures">
+                    <div class ="caption">
+                        <h3>{{hemisphere.title}}</h3>
+
+                    </div>
+
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+    
+</body>
+</html>

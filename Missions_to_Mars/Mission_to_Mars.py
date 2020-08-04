@@ -15,9 +15,31 @@ def initial_browser():
     return Browser('chrome', **executable_path, headless=False)
 
 def scrape():
-    browser = initial_browswer()
+
+    browser = initial_browser()
+
+    # Create a dictionary so we insert in MongoDB
+
     mars_collection = {}
-    
+
+    #Running first function
+    titles, body = mars_news()
+
+    #Run all functions and store in a dictionary
+
+    mars_collection["title"] = titles
+    mars_collection["paragraph"] = body
+    mars_collection["feature_image"] = featured_images()
+    mars_collection["weather"] = twitter_info()
+    mars_collection["facts"] = mars_facts()
+    mars_collection["hemispheres"] = hemispheres()
+
+    browser.quit()
+
+    return mars_collection
+
+def mars_news():
+    browser = initial_browser()
     #NASA url
     url = "https://mars.nasa.gov/news/?page=0&per_page=40&order=publish_date+desc%2Ccreated_at+desc&search=&category=19%2C165%2C184%2C204&blank_scope=Latest"
 
@@ -46,9 +68,20 @@ def scrape():
 
     for result in results:
         titles=soup.find('div', class_='content_title')
-        mars_collection['title']=titles.a.text
-        mars_collection['body']=soup.find('div', class_='rollover_description_inner').text
-      
+        title=titles.a.text
+        body=soup.find('div', class_='rollover_description_inner').text
+  
+        print('--------------------')
+        print(title)
+        print(body)
+    
+        #mars_collection['title']=titles.a.text
+        #mars_collection['body']=soup.find('div', class_='rollover_description_inner').text
+    browser.quit()
+    return title, body
+    
+def featured_images():  
+    browser = initial_browser()
     #URL for the feature image
     url2 = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
 
@@ -72,9 +105,18 @@ def scrape():
     find_image = image_soup.select_one('figure.lede a img').get("src")
     find_image
 
+   
+
     #Build the image url
-    mars_collection['final_image_url'] = f'https://www.jpl.nasa.gov{find_image}'
-  
+    #mars_collection['final_image_url'] = f'https://www.jpl.nasa.gov{find_image}'
+    #Build the image url
+    final_image_url = f'https://www.jpl.nasa.gov{find_image}'
+    final_image_url
+    browser.quit()
+    return final_image_url
+
+def twitter_info():
+    browser = initial_browser()
     #URL for Twitter
     import time
     url3 = "https://twitter.com/marswxreport?lang=en"
@@ -91,8 +133,13 @@ def scrape():
     #Pull the tweet for Mars weather
     articles = soup.find_all("div", class_ = "css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-1mi0q7o")
     texts = [x.get_text() for x in articles[0].find_all('span', class_="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0")]
-    mars_collection['mars_weather'] = [i for i in texts if len(i)>25][0]
-  
+    mars_weather = [i for i in texts if len(i)>25][0]
+    #mars_collection['mars_weather'] = [i for i in texts if len(i)>25][0]
+    browser.quit()
+    return mars_weather
+
+def mars_facts():
+    browser = initial_browser()
     #URL for Mars facts
     url4 = 'https://space-facts.com/mars/'
 
@@ -107,10 +154,16 @@ def scrape():
     table_df
 
     #writing the dataframe to a html
-    table_html = table_df.to_html()
-    table_html = table_html.replace("\n","")
-    mars_collection['table']=table_html
+    # table_
+    # table_html = df
+    # table_html = table_html.replace("\n","")
+    #mars_collection['table']=table_html
+    browser.quit()
+    return table_df.to_html()
 
+def hemispheres():
+    browser = initial_browser()
+    #browser = initial_browser()
     #URL for Mars hemispheres
     url5 = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
     browser.visit(url5)
@@ -140,10 +193,18 @@ def scrape():
         
         hemi_url.append({"title": title,
                     "image_url": full_image})
+        
+        hemi_url
     
-    mars_collection['hemisphere_images'] = hemi_url
+    #mars_collection['hemisphere_images'] = hemi_url
+    browser.quit()
+    return hemi_url
 
-    return mars_collection
+if __name__ == "__main__":
+
+    print(scrape())
+
+
     
 
 
