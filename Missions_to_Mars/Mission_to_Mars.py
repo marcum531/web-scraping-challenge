@@ -111,7 +111,7 @@ def featured_images():
     #mars_collection['final_image_url'] = f'https://www.jpl.nasa.gov{find_image}'
     #Build the image url
     final_image_url = f'https://www.jpl.nasa.gov{find_image}'
-    final_image_url
+    
     browser.quit()
     return final_image_url
 
@@ -121,17 +121,21 @@ def twitter_info():
     import time
     url3 = "https://twitter.com/marswxreport?lang=en"
     browser.visit(url3)
+    time.sleep(5)
+    browser.reload()
+    time.sleep(5)
     #retrieve page
     #response = requests.get(url3)
     html_twitter = browser.html
     time.sleep(5)
     #parse the website
     soup = bs(html_twitter, 'html.parser')
-
+    time.sleep(5)
     print(soup.prettify())
 
     #Pull the tweet for Mars weather
     articles = soup.find_all("div", class_ = "css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-1mi0q7o")
+    
     texts = [x.get_text() for x in articles[0].find_all('span', class_="css-901oao css-16my406 r-1qd0xha r-ad9z0x r-bcqeeo r-qvutc0")]
     mars_weather = [i for i in texts if len(i)>25][0]
     #mars_collection['mars_weather'] = [i for i in texts if len(i)>25][0]
